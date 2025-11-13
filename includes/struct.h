@@ -90,6 +90,7 @@ typedef struct s_game
 	t_img		screen;
 	t_player	player;
 	t_keys		keys;
+	double		dt;
 }				t_game;
 
 typedef struct s_spawn_entry
@@ -135,6 +136,7 @@ typedef struct s_slice
 # define EPS 1e-6
 
 # define TEX_SIZE 64
+# define TARGET_FPS 60.0
 
 /*_________________________________ keyhook _____________________________*/
 # ifdef __APPLE__

@@ -152,6 +152,10 @@ int		img_create(void *mlx, t_img *img, int w, int h);
 void	img_destroy(void *mlx, t_img *img);
 void	cub_cleanup(t_game *g);
 
+/*_________________________________ timer.c _________________________________*/
+double	timer_delta(void);
+void	timer_sleep(double target_hz);
+void    timer_log_fps(void);
 
 /*_________________________________ loop.c __________________________________*/
 int		loop_hook(void *param);

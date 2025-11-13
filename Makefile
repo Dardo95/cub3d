@@ -52,6 +52,7 @@ SRC := \
   src/rendering/render_textures.c \
   src/rendering/render_walls.c \
   src/utils/mlx_utils.c \
+  src/utils/timer.c \
 
   $(SRC_DEBUG)
 

@@ -95,8 +95,11 @@ static void	handle_rotate(t_game *g)
 int	loop_hook(void *param)
 {
 	t_game	*g;
+	double	dt;
 
 	g = (t_game *)param;
+	dt = timer_delta();
+	g->dt = dt;
 	if (ensure_screen(g) == -1)
 		return (0);
 	handle_move(g);
@@ -104,5 +107,7 @@ int	loop_hook(void *param)
 	render_floor_ceiling(g);
 	raycaster(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->screen.ptr, 0, 0);
+	timer_sleep(TARGET_FPS);
+	timer_log_fps();
 	return (0);
 }
