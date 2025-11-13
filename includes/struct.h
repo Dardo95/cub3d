@@ -71,6 +71,7 @@ typedef struct s_game
 	char		*so_texture;
 	char		*we_texture;
 	char		*ea_texture;
+	char		*map_dir;
 
 	t_texture	no;
 	t_texture	so;

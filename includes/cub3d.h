@@ -50,6 +50,7 @@ int		init_player(t_game *g);
 
 /*_________________________________ init_textures.c _________________________*/
 
+int	load_texture_with_base(t_game *g, t_texture *tex, const char *path);
 int     init_textures(t_game *g);
 
 /*MOVEMENT*/
@@ -58,6 +59,10 @@ int     init_textures(t_game *g);
 int		is_point_wall(t_game *g, double x, double y);
 int		is_wall(t_game *g, double x, double y);
 void	wall_slide_move(t_game *g, double dx, double dy);
+
+/*_________________________________ movement_player_loop.c __________________*/
+void	handle_move(t_game *g);
+void	update_position(t_game *g, double dx, double dy);
 
 /*_________________________________ movement_sliding.c ______________________*/
 
@@ -115,6 +120,9 @@ int		build_map_rect(t_map *m, char **lines, int n);
 int		err(const char *msg);
 int		parse_scene(t_game *g, const char *path);
 
+/*_________________________________ parser_utils.c __________________________*/
+int		set_map_directory(t_game *g, const char *path);
+
 /*_________________________________ texture_checker.c _______________________*/
 
 int		set_texture(t_game *game, const char *line, char *path);
@@ -151,6 +159,10 @@ void	render_walls(t_game *game, int x, t_ray *ray);
 int		img_create(void *mlx, t_img *img, int w, int h);
 void	img_destroy(void *mlx, t_img *img);
 void	cub_cleanup(t_game *g);
+
+
+int	load_texture(void *mlx, t_texture *tex, const char *path);
+char	*join_texture_path(const char *dir, const char *path);
 
 /*_________________________________ timer.c _________________________________*/
 double	timer_delta(void);

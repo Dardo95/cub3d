@@ -22,7 +22,7 @@ static int	ensure_screen(t_game *g)
 	return (0);
 }
 
-static void	update_position(t_game *g, double dx, double dy)
+void	update_position(t_game *g, double dx, double dy)
 {
 	int	nx;
 	int	ny;
@@ -37,38 +37,6 @@ static void	update_position(t_game *g, double dx, double dy)
 		g->player.pos.x += dx;
 		g->player.pos.y += dy;
 	}
-}
-
-static void	handle_move(t_game *g)
-{
-	double	speed;
-	double	dx;
-	double	dy;
-
-	speed = MOVE_SPEED;
-	dx = 0.0;
-	dy = 0.0;
-	if (g->keys.w)
-	{
-		dx += g->player.dir.x * speed;
-		dy += g->player.dir.y * speed;
-	}
-	if (g->keys.s)
-	{
-		dx -= g->player.dir.x * speed;
-		dy -= g->player.dir.y * speed;
-	}
-	if (g->keys.a)
-	{
-		dx += -g->player.dir.y * speed;
-		dy += g->player.dir.x * speed;
-	}
-	if (g->keys.d)
-	{
-		dx += g->player.dir.y * speed;
-		dy += -g->player.dir.x * speed;
-	}
-	update_position(g, dx, dy);
 }
 
 static void	handle_rotate(t_game *g)

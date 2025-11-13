@@ -74,6 +74,8 @@ void	cub_cleanup(t_game *g)
 		return ;
 	free_map(g);
 	free_texture_paths(g);
+	free(g->map_dir);
+	g->map_dir = NULL;
 	if (g->mlx)
 	{
 		destroy_texture(g->mlx, &g->no);

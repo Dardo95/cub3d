@@ -1,43 +1,35 @@
+# ==============================
+#            CONFIG
+# ==============================
+
 NAME        := cub3D
 CC          := cc
-CFLAGS      := -Wall -Wextra -Werror
-INCS        := -Iincludes -Ilibft -Iminilibx-linux
+CFLAGS      := -Wall -Wextra -Werror -MMD -MP
+IFLAGS      := -Iincludes -Ilibft -Iminilibx-linux
+LFLAGS      := -Llibft -lft -Lminilibx-linux -lmlx -lXext -lX11 -lm -lz
+BUILD_DIR   := build
 
-# MiniLibX
-MLX_DIR     := minilibx-linux
-MLX_LIB_A   := $(MLX_DIR)/libmlx.a
-X11_LIBS    := -lXext -lX11 -lm -lz
-
-# libft
-LIBFT_DIR   := libft
-LIBFT_A     := $(LIBFT_DIR)/libft.a
-
-BUILD       := build
-
-# ----------------- DEBUG -----------------
-DEBUG ?= 0
-ifeq ($(DEBUG),1)
-CFLAGS += -g -DDEBUG
-SRC_DEBUG := src/debug/debug_player.c
-endif
-# ----------------------------------------
+# ==============================
+#            FILES
+# ==============================
 
 SRC := \
   src/main.c \
-  src/loop.c \
+  src/core/loop.c \
   src/core/run.c \
-  src/debug/debug_player.c \
   src/events/events.c \
   src/init/init_game.c \
   src/init/init_mlx.c \
   src/init/init_player.c \
   src/init/init_textures.c \
-  src/movement/movement_collision.c \
+  src/movement/movement.c \
+  src/movement/movement_utils.c \
   src/movement/movement_sliding.c \
   src/movement/movement_subdiv.c \
-  src/movement/movement_utils.c \
-  src/movement/movement.c \
+  src/movement/movement_collision.c \
+  src/movement/movement_player_loop.c \
   src/parser/parser.c \
+  src/parser/parser_utils.c \
   src/parser/header_scan.c \
   src/parser/map_reader.c \
   src/parser/map_rect.c \
@@ -46,57 +38,79 @@ SRC := \
   src/parser/color_parser.c \
   src/parser/player_spawn.c \
   src/parser/texture_checker.c \
-  src/rendering/raycaster_utils.c \
   src/rendering/raycaster.c \
-  src/rendering/render_floor_ceiling.c \
-  src/rendering/render_textures.c \
+  src/rendering/raycaster_utils.c \
   src/rendering/render_walls.c \
+  src/rendering/render_textures.c \
+  src/rendering/render_floor_ceiling.c \
+  src/utils/errors.c \
   src/utils/mlx_utils.c \
-  src/utils/timer.c \
+  src/utils/texture_utils.c \
+  src/utils/timer.c
 
-  $(SRC_DEBUG)
+OBJ := $(SRC:.c=.o)
+OBJ := $(addprefix $(BUILD_DIR)/, $(OBJ))
+DEP := $(OBJ:.o=.d)
 
-OBJ := $(SRC:%.c=$(BUILD)/%.o)
+# ==============================
+#            COLORS
+# ==============================
 
-all: $(MLX_LIB_A) $(LIBFT_A) $(NAME)
+BLUE := \033[34m
+GREEN := \033[32m
+YELLOW := \033[33m
+CYAN := \033[36m
+RESET := \033[0m
 
-$(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(MLX_LIB_A) $(LIBFT_A) $(X11_LIBS) -o $(NAME)
+-include $(DEP)
 
-$(BUILD)/%.o: %.c | $(BUILD)
+# ==============================
+#            RULES
+# ==============================
+
+all: $(NAME)
+
+$(NAME): libft/libft.a minilibx-linux/libmlx.a $(OBJ)
+	@printf "$(CYAN)\r🔗 Enlazando: $(NAME)                     $(RESET)\n"
+	@$(CC) $(OBJ) -o $(NAME) $(CFLAGS) $(LFLAGS)
+	@printf "$(GREEN)\n✅ Compilación completa$(RESET)\n"
+
+$(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCS) -c $< -o $@
+	@printf "$(BLUE)\r⚙️  Compilando: $<                         $(RESET)"
+	@$(CC) $(CFLAGS) $(IFLAGS) -o $@ -c $<
 
-$(BUILD):
-	@mkdir -p $(BUILD)
+libft/libft.a:
+	@$(MAKE) -C libft
 
-$(MLX_LIB_A):
-	$(MAKE) -C $(MLX_DIR)
-
-$(LIBFT_A):
-	$(MAKE) -C $(LIBFT_DIR)
+minilibx-linux/libmlx.a:
+	@$(MAKE) -C minilibx-linux
 
 clean:
-	rm -rf $(BUILD)
-	$(MAKE) -C $(MLX_DIR) clean || true
-	$(MAKE) -C $(LIBFT_DIR) clean || true
+	@printf "$(YELLOW)\r🧹 Limpiando objetos...                $(RESET)\n"
+	@rm -rf $(BUILD_DIR)
+	@$(MAKE) -C libft clean || true
+	@$(MAKE) -C minilibx-linux clean || true
 
 fclean: clean
-	rm -f $(NAME)
-	$(MAKE) -C $(LIBFT_DIR) fclean || true
+	@printf "$(YELLOW)\r🗑️  Borrando ejecutable...              $(RESET)\n"
+	@rm -f $(NAME)
+	@$(MAKE) -C libft fclean || true
+	@printf "$(GREEN)\r✅  Limpieza completa.                  $(RESET)\n"
 
 re: fclean all
 
-# Compilación en modo debug (activa -g y -DDEBUG)
-debug:
-	$(MAKE) DEBUG=1
+norm:
+	@printf "$(YELLOW)\n🔍 Revisando con norminette...$(RESET)\n"
+	norminette includes
+	norminette $(SRC)
 
-# Ejecutar con un mapa: make run MAP=maps/ok_player_N.cub
 run: all
 	@if [ -z "$(MAP)" ]; then \
-		echo "Uso: make run MAP=path/al/archivo.cub"; \
+		echo "Uso: make run MAP=maps/archivo.cub"; \
 	else \
 		./$(NAME) $(MAP); \
 	fi
 
-.PHONY: all clean fclean re debug run
+.PHONY: all clean fclean re norm run
+.DEFAULT_GOAL := all

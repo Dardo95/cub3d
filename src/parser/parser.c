@@ -51,26 +51,10 @@ static int	parse_map_stage(int fd, char *map_first, t_game *g)
 	return (1);
 }
 
-int	err(const char *msg)
+int	parse_scene_core(t_game *g, int fd)
 {
-	write(2, "Error\n", 6);
-	ft_error((char *)msg, FALSE);
-	write(2, "\n", 1);
-	return (0);
-}
-
-int	parse_scene(t_game *g, const char *path)
-{
-	int		fd;
 	char	*map_first;
 
-	if (!g || !path)
-		return (0);
-	g->floor_color = -1;
-	g->ceiling_color = -1;
-	fd = open_scene_fd(path);
-	if (fd < 0)
-		return (err("Cannot open .cub file"));
 	if (!parse_header_stage(fd, g, &map_first))
 	{
 		close(fd);
@@ -85,4 +69,20 @@ int	parse_scene(t_game *g, const char *path)
 		return (0);
 	close(fd);
 	return (1);
+}
+
+int	parse_scene(t_game *g, const char *path)
+{
+	int	fd;
+
+	if (!g || !path)
+		return (0);
+	g->floor_color = -1;
+	g->ceiling_color = -1;
+	if (!set_map_directory(g, path))
+		return (err("Failed to resolve map directory"));
+	fd = open_scene_fd(path);
+	if (fd < 0)
+		return (err("Cannot open .cub file"));
+	return (parse_scene_core(g, fd));
 }

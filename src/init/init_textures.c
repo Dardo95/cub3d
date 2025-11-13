@@ -12,44 +12,55 @@
 
 #include "../../includes/cub3d.h"
 
-static int	load_texture(void *mlx, t_texture *tex, const char *path)
+static const char	*resolve_texture_path(t_game *g, const char *path, char **to_free)
 {
+	char	*candidate;
+
+	*to_free = NULL;
+	if (can_open_readonly(path))
+		return (path);
+	if (!g->map_dir || path[0] == '\0' || path[0] == '/')
+		return (NULL);
+	candidate = join_texture_path(g->map_dir, path);
+	if (!candidate)
+		return (NULL);
+	if (!can_open_readonly(candidate))
+	{
+		free(candidate);
+		return (NULL);
+	}
+	*to_free = candidate;
+	return (candidate);
+}
+
+int	load_texture_with_base(t_game *g, t_texture *tex, const char *path)
+{
+	const char	*source;
+	char		*to_free;
+	int			result;
+
 	if (!path || !*path)
 		return (err("Missing texture path"));
-	if (!can_open_readonly(path))
+	source = resolve_texture_path(g, path, &to_free);
+	if (!source)
 		return (err("Cannot open texture file"));
-	tex->img_ptr = mlx_xpm_file_to_image(mlx, (char *)path,
-			&tex->width, &tex->height);
-	if (!tex->img_ptr)
-		return (err("Failed to load texture"));
-	if (tex->width > TEX_SIZE || tex->height > TEX_SIZE)
-	{
-		mlx_destroy_image(mlx, tex->img_ptr);
-		tex->img_ptr = NULL;
-		return (err("Texture too large"));
-	}
-	tex->data = mlx_get_data_addr(tex->img_ptr, &tex->bpp,
-			&tex->line_len, &tex->endian);
-	if (!tex->data)
-	{
-		mlx_destroy_image(mlx, tex->img_ptr);
-		tex->img_ptr = NULL;
-		return (err("Failed to get texture data"));
-	}
-	return (1);
+	result = load_texture(g->mlx, tex, source);
+	if (to_free)
+		free(to_free);
+	return (result);
 }
 
 int	init_textures(t_game *g)
 {
 	if (!g || !g->mlx)
 		return (err("MLX not initialized"));
-	if (!load_texture(g->mlx, &g->no, g->no_texture))
+	if (!load_texture_with_base(g, &g->no, g->no_texture))
 		return (0);
-	if (!load_texture(g->mlx, &g->so, g->so_texture))
+	if (!load_texture_with_base(g, &g->so, g->so_texture))
 		return (0);
-	if (!load_texture(g->mlx, &g->we, g->we_texture))
+	if (!load_texture_with_base(g, &g->we, g->we_texture))
 		return (0);
-	if (!load_texture(g->mlx, &g->ea, g->ea_texture))
+	if (!load_texture_with_base(g, &g->ea, g->ea_texture))
 		return (0);
 	return (1);
 }
