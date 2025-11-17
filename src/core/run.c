@@ -39,13 +39,13 @@ static int	check_file_openable(const char *path)
 static int	init_all(t_game *g, const char *path)
 {
 	if (!parse_scene(g, path))
-		return (err("Parse failed"));
-	if (init_mlx(g) == -1)
-		return (err("MLX init failed"));
+		return (0);
+	if (!init_mlx(g))
+		return (0);
 	if (!init_textures(g))
-		return (err("Textures init failed"));
-	if (init_player(g) == -1)
-		return (err("Player init failed"));
+		return (0);
+	if (!init_player(g))
+		return (0);
 	set_hooks(g);
 	return (1);
 }

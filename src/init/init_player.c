@@ -61,5 +61,5 @@ int	init_player(t_game *g)
 	g->player.pos.x = (double)g->player_x + 0.5;
 	g->player.pos.y = (double)g->player_y + 0.5;
 	set_plane_dir(&g->player, g->player_dir);
-	return (0);
+	return (1);
 }
