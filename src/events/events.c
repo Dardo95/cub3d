@@ -54,7 +54,7 @@ int	key_release(int keycode, void *param)
 	else if (keycode == KEY_A)
 		g->keys.a = 0;
 	else if (keycode == KEY_S)
-		g->keys.s= 0;
+		g->keys.s = 0;
 	else if (keycode == KEY_D)
 		g->keys.d = 0;
 	else if (keycode == KEY_RIGHT)

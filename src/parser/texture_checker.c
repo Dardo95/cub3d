@@ -19,7 +19,7 @@ static char	*get_texture_path(char *line)
 	size_t	len;
 
 	if (!line || !line[0] || !line[1])
-        return (NULL);
+		return (NULL);
 	start = line + 2;
 	while (*start == ' ' || *start == '\t')
 		start++;
@@ -28,8 +28,8 @@ static char	*get_texture_path(char *line)
 	end = start;
 	while (*end && *end != '\n' && *end != '\r')
 		end++;
-	while (end > start && (end[-1] == ' ' ||
-			end[-1] == '\t' || end[-1] == '\n' || end[-1] == '\r'))
+	while (end > start && (end[-1] == ' '
+			|| end[-1] == '\t' || end[-1] == '\n' || end[-1] == '\r'))
 		end--;
 	len = (size_t)(end - start);
 	if (len == 0)
@@ -64,25 +64,24 @@ int	set_texture(t_game *game, const char *line, char *path)
 	return (0);
 }
 
-int parse_texture(t_game *game, char *line)
+int	parse_texture(t_game *game, char *line)
 {
-    char *path;
+	char	*path;
 
-    if (!line)
-        return (0);
-
-    while (*line == ' ' || *line == '\t')
-        line++;
-    if (!(*line && *(line + 1)))
-        return (0);
-    if (*(line + 2) != ' ' && *(line + 2) != '\t')
-        return (0);
-    path = get_texture_path(line);
-    if (!path)
-        return (0);
-    if (!set_texture(game, line, path))
-        return (0);
-    return (1);
+	if (!line)
+		return (0);
+	while (*line == ' ' || *line == '\t')
+		line++;
+	if (!(*line && *(line + 1)))
+		return (0);
+	if (*(line + 2) != ' ' && *(line + 2) != '\t')
+		return (0);
+	path = get_texture_path(line);
+	if (!path)
+		return (0);
+	if (!set_texture(game, line, path))
+		return (0);
+	return (1);
 }
 
 int	can_open_readonly(const char *p)

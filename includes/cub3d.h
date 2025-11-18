@@ -22,6 +22,7 @@
 # include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <stdio.h>
 
 /*CORE*/
 /*_________________________________ core/run.c _______________________________*/
@@ -30,10 +31,9 @@ int		cub3d_run(const char *path);
 /*EVENTS*/
 /*_________________________________ events.c ________________________________*/
 void	set_hooks(t_game *g);
-int     key_release(int keycode, void *param);
+int		key_release(int keycode, void *param);
 int		key_press(int keycode, void *param);
 int		exit_program(void *param);
-
 
 /*INIT*/
 /*_________________________________ init_game.c _____________________________*/
@@ -50,8 +50,8 @@ int		init_player(t_game *g);
 
 /*_________________________________ init_textures.c _________________________*/
 
-int	load_texture_with_base(t_game *g, t_texture *tex, const char *path);
-int     init_textures(t_game *g);
+int		load_texture_with_base(t_game *g, t_texture *tex, const char *path);
+int		init_textures(t_game *g);
 
 /*MOVEMENT*/
 /*_________________________________ movement_collision.c ____________________*/
@@ -77,12 +77,10 @@ void	subdiv_move(t_game *g, double total_dx, double total_dy);
 void	try_smooth_move(t_game *g, double dx, double dy);
 int		check_collision_corners(t_game *g, double x, double y, double r);
 
-
 /*_________________________________ movement.c ______________________________*/
 
 void	rotate_player(t_player *p, double angle);
 int		movement_update(t_game *g);
-
 
 /*PARSER*/
 /*_________________________________ color_parser.c __________________________*/
@@ -93,7 +91,7 @@ int		parse_ceiling_color(t_game *game, const char *line);
 
 /*_________________________________ header_scan.c __________________________*/
 
-int		scan_header(int fd, t_game *g, char **map_first);
+int		process_line(int fd, t_game *g, char *line, char **map_first);
 
 /*_________________________________ map_checker_utils.c _____________________*/
 
@@ -122,13 +120,13 @@ int		parse_scene(t_game *g, const char *path);
 
 /*_________________________________ parser_utils.c __________________________*/
 int		set_map_directory(t_game *g, const char *path);
+int		scan_header(int fd, t_game *g, char **map_first);
 
 /*_________________________________ texture_checker.c _______________________*/
 
 int		set_texture(t_game *game, const char *line, char *path);
 int		parse_texture(t_game *game, char *line);
 int		can_open_readonly(const char *p);
-
 
 /*RENDERING*/
 /*_________________________________ raycaster_utils.c  ______________________*/
@@ -152,7 +150,6 @@ int		tex_sample(t_game *game, int id, int x, int y);
 
 void	render_walls(t_game *game, int x, t_ray *ray);
 
-
 /*UTILS & OTHERS*/
 /*_________________________________ mlx_utils.c _____________________________*/
 
@@ -160,14 +157,13 @@ int		img_create(void *mlx, t_img *img, int w, int h);
 void	img_destroy(void *mlx, t_img *img);
 void	cub_cleanup(t_game *g);
 
-
-int	load_texture(void *mlx, t_texture *tex, const char *path);
+int		load_texture(void *mlx, t_texture *tex, const char *path);
 char	*join_texture_path(const char *dir, const char *path);
 
 /*_________________________________ timer.c _________________________________*/
 double	timer_delta(void);
 void	timer_sleep(double target_hz);
-void    timer_log_fps(void);
+void	timer_log_fps(void);
 
 /*_________________________________ loop.c __________________________________*/
 int		loop_hook(void *param);
@@ -176,7 +172,6 @@ int		loop_hook(void *param);
 int		extract_player_spawn(t_map *m, t_game *g);
 
 /*_________________________________ debug_player.c __________________________*/
-
 
 # ifdef DEBUG
 

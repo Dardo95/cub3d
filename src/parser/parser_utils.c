@@ -34,3 +34,20 @@ int	set_map_directory(t_game *g, const char *path)
 	g->map_dir = ft_substr(path, 0, (size_t)(slash - path));
 	return (g->map_dir != NULL);
 }
+
+int	scan_header(int fd, t_game *g, char **map_first)
+{
+	char	*line;
+	int		result;
+
+	*map_first = NULL;
+	line = get_next_line(fd);
+	while (line)
+	{
+		result = process_line(fd, g, line, map_first);
+		if (result != 0)
+			return (result);
+		line = get_next_line(fd);
+	}
+	return (err("Missing identifiers (NO, SO, WE, EA, F, C)"));
+}

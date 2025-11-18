@@ -12,7 +12,8 @@
 
 #include "../../includes/cub3d.h"
 
-static const char	*resolve_texture_path(t_game *g, const char *path, char **to_free)
+static const char	*resolve_texture_path(t_game *g, const char *path,
+	char **to_free)
 {
 	char	*candidate;
 
