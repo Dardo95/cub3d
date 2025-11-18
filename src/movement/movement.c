@@ -65,7 +65,8 @@ int	movement_update(t_game *g)
 	total_dx = 0.0;
 	total_dy = 0.0;
 	calculate_movement_wasd(g, &total_dx, &total_dy);
-	if (fabs(total_dx) > MIN_MOVE_DISTANCE || fabs(total_dy) > MIN_MOVE_DISTANCE)
+	if (fabs(total_dx) > MIN_MOVE_DISTANCE
+		|| fabs(total_dy) > MIN_MOVE_DISTANCE)
 		subdiv_move(g, total_dx, total_dy);
 	handle_rotation(g);
 	return (0);

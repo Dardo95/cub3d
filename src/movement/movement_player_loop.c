@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   movement_player_loop.c                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rmunoz-c <rmunoz-c@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-11-18 17:10:59 by rmunoz-c          #+#    #+#             */
+/*   Updated: 2025-11-18 17:10:59 by rmunoz-c         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/cub3d.h"
 
 static void	accumulate_movement(t_game *g, double speed, double *dx, double *dy)

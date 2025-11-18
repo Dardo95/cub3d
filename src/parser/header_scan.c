@@ -90,31 +90,27 @@ static int	handle_non_header_line(int fd, t_game *g,
 	return (1);
 }
 
-int	scan_header(int fd, t_game *g, char **map_first)
+int	process_line(int fd, t_game *g, char *line, char **map_first)
 {
-	char	*line;
-	int		r;
-	int		h;
+	int	r;
+	int	h;
 
-	*map_first = NULL;
-	while ((line = get_next_line(fd)))
+	r = parse_header_line(g, line);
+	if (r == 2)
 	{
-		r = parse_header_line(g, line);
-		if (r == 2)
-		{
-			free(line);
-			if (!set_map_first_skip_empty(fd, map_first))
-				return (err("Missing map"));
-			return (1);
-		}
-		if (r != 1)
-		{
-			h = handle_non_header_line(fd, g, line, map_first);
-			if (h == 0)
-				continue ;
-			return (h > 0);
-		}
 		free(line);
+		if (!set_map_first_skip_empty(fd, map_first))
+			return (err("Missing map"));
+		return (1);
 	}
-	return (err("Missing identifiers (NO, SO, WE, EA, F, C)"));
+	if (r != 1)
+	{
+		h = handle_non_header_line(fd, g, line, map_first);
+		free(line);
+		if (h == 0)
+			return (0);
+		return (h > 0);
+	}
+	free(line);
+	return (0);
 }

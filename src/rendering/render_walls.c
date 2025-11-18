@@ -23,15 +23,18 @@ static void	draw_slice(t_game *game, t_ray *ray, t_slice *slice)
 {
 	int	y;
 	int	tex_y;
+	int	tex_x;
 	int	color;
 
 	y = slice->start;
 	while (y < slice->end)
 	{
 		tex_y = (int)slice->tex_pos & (TEX_SIZE - 1);
-		color = tex_sample(game, ray->tex_id, ray->tex_x, tex_y);
-		if (ray->side_hit == 1)
-			color = (color >> 1) & 8355711;
+		tex_x = ray->tex_x;
+		if ((ray->side_hit == 0 && ray->dir.x < 0)
+			|| (ray->side_hit == 1 && ray->dir.y > 0))
+			tex_x = TEX_SIZE - 1 - tex_x;
+		color = tex_sample(game, ray->tex_id, tex_x, tex_y);
 		put_pixel(&game->screen, slice->x, y, color);
 		slice->tex_pos += slice->step;
 		y++;

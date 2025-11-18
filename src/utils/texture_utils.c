@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   texture_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rmunoz-c <rmunoz-c@student.42.fr>          #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-11-18 17:30:19 by rmunoz-c          #+#    #+#             */
+/*   Updated: 2025-11-18 17:30:19 by rmunoz-c         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cub3d.h"
 
 static int	validate_texture_and_extract(void *mlx, t_texture *tex)
@@ -21,8 +33,13 @@ static int	validate_texture_and_extract(void *mlx, t_texture *tex)
 
 int	load_texture(void *mlx, t_texture *tex, const char *path)
 {
+	size_t	len;
+
 	if (!path || !*path)
 		return (err("Missing texture path"));
+	len = ft_strlen(path);
+	if (len < 4 || ft_strncmp(path + len - 4, ".xpm", 4) != 0)
+		return (err("Texture must be .xpm"));
 	if (!can_open_readonly(path))
 		return (err("Cannot open texture file"));
 	tex->img_ptr = mlx_xpm_file_to_image(mlx, (char *)path,

@@ -133,7 +133,7 @@ typedef struct s_slice
 
 /*_________________________________ raycasting ______________________________*/
 # define MOVE_SPEED 0.05
-# define ROT_SPEED 0.05
+# define ROT_SPEED 0.07
 # define EPS 1e-6
 
 # define TEX_SIZE 64
@@ -160,7 +160,6 @@ typedef struct s_slice
 
 # define WIN_W WIDTH
 # define WIN_H HEIGHT
-# define TEX_SIZE 64
 # define DIR_NORTH 0
 # define DIR_SOUTH 1
 # define DIR_WEST  2
